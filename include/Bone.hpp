@@ -2,12 +2,13 @@
 
 #include <vector>
 #include <iostream>
-#include "glm_inc.hpp"
 #include "GLM_utils.hpp"
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
+#include <assert.h>
+
 
 // #define nrg glm
 

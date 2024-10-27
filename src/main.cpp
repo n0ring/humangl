@@ -10,7 +10,7 @@
 #include "VertexArray.hpp"
 #include "Shader.hpp"
 #include "Renderer.hpp"
-#include "ParsedObject.hpp"
+// #include "ParsedObject.hpp"
 
 #include <assimp/cimport.h>
 #include <assimp/scene.h>
@@ -23,7 +23,7 @@
 #include <unistd.h>
 
 #include "AnimationConfigParser.hpp"
-#include "glm_inc.hpp"
+// #include "glm_inc.hpp"
 
 
 std::string animationNames[] = {"idle", "jump", "walk", "kick"};
@@ -71,8 +71,8 @@ int main(int argc, char** argv)
 	glEnable(GL_BLEND);
 	std::unordered_map<std::string, std::string> configMap;
 
-	std::string configFileName = "animations.conf";
-	// std::string configFileName = "humangl_animations.conf"; 
+	// std::string configFileName = "animations.conf";
+	std::string configFileName = "humangl_animations.conf"; 
 	if (!AnimationConfigParser::parseConfig(configFileName, configMap))
 	{
 		return -1;

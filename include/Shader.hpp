@@ -6,7 +6,7 @@
 // #include "glm/glm.hpp"
 #include "nrg_math.hpp"
 
-#include "glm_inc.hpp"
+// #include "glm_inc.hpp"
 // #define nrg glm
 
 struct ShaderProgramSourse

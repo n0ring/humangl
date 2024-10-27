@@ -1,6 +1,4 @@
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
+
 #include "Model.hpp"
 
 Model::Model(const std::string path, int objId)
@@ -265,14 +263,14 @@ void Model::ExtractBoneWeightForVertices(std::vector<Vertex> &vertices, aiMesh *
 			;
 			return;
 		}
-		assert(boneId != -1);
+		// assert(boneId != -1);
 		auto weights = mesh->mBones[boneIndex]->mWeights;
 		int numWeights = mesh->mBones[boneIndex]->mNumWeights;
 		for (int weightIndex = 0; weightIndex < numWeights; weightIndex++)
 		{
 			int vertexId = weights[weightIndex].mVertexId;
 			float weight = weights[weightIndex].mWeight;
-			assert(vertexId < vertices.size());
+			// assert(vertexId < vertices.size());
 			SetVertexBoneData(vertices[vertexId], boneId, weight); // bind bone (id) and weight to vertex
 		}
 	}

@@ -1,7 +1,7 @@
 #pragma once 
 #include "nrg_math.hpp"
 
-#include "glm_inc.hpp"
+// #include "glm_inc.hpp"
 
 #define MOVE_STEP 1.0f
 #define SCALE_STEP 0.01f

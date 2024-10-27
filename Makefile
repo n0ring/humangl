@@ -4,11 +4,9 @@ SRC		=	$(addprefix src/,	main.cpp\
 								VertexBuffer.cpp\
 								IndexBuffer.cpp\
 								VertexArray.cpp\
-								UniformBuffer.cpp\
 								Shader.cpp\
 								stb_image.cpp\
 								KeyboardManager.cpp\
-								BmpLoader.cpp\
 								Model.cpp\
 								Bone.cpp\
 								Animation.cpp\

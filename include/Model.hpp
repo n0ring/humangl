@@ -10,13 +10,14 @@
 #include "VertexBuffer.hpp"
 #include "VertexArray.hpp"
 #include "IndexBuffer.hpp"
-#include "UniformBuffer.hpp"
+// #include "UniformBuffer.hpp"
 
 #include "vendor/stb_image/stb_image.h"
 #include "nrg_math.hpp"
 #include "Shader.hpp"
+#include "ModelState.hpp"
 
-#include "glm_inc.hpp"
+// #include "glm_inc.hpp"
 #include "GLM_utils.hpp"
 
 #define MAX_BONE_INFLUENCE 4
@@ -74,7 +75,7 @@ private:
 	//  render data
 	unsigned int VAO, VBO, EBO;
 
-	std::unique_ptr<UniformBuffer> m_UBO;
+	// std::unique_ptr<UniformBuffer> m_UBO;
 	std::unique_ptr<VertexArray> m_VAO;
 	std::unique_ptr<IndexBuffer> m_IBO;
 	std::unique_ptr<VertexBuffer> m_VBO;

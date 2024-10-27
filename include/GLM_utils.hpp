@@ -1,6 +1,6 @@
 #pragma once
 
-#include "glm_inc.hpp"
+// #include "glm_inc.hpp"
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
