@@ -7,7 +7,7 @@ namespace nrg
 	struct vec4
 	{
 		float x, y, z, w;
-		vec4() {}
+		vec4() : x(0.0f), y(0.0f), z(0.0f), w(0.0f) {}
 		vec4(float val) : x(val), y(val), z(val), w(val) {}
 		vec4(float val_x, float val_y, float val_z, float val_w) : x(val_x), y(val_y), z(val_z), w(val_w) {}
 		inline float &operator[](int i)

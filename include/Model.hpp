@@ -63,7 +63,11 @@ public:
 	std::vector<Texture> m_Textures;
 
 	Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures, nrg::vec4 color)
-		: m_Vertices(vertices), m_Indices(indices), m_Textures(textures), mesh_color(color) {}
+		: m_Vertices(vertices), m_Indices(indices), m_Textures(textures), mesh_color(color)
+	{
+		if (m_Textures.empty())
+			hasColor = true;
+	}
 	void Draw(Shader &shader);
 	void setupMesh(); // set buffers
 private:
@@ -76,6 +80,7 @@ private:
 	std::unique_ptr<VertexBuffer> m_VBO;
 	std::unique_ptr<::Texture> m_texture;
 	nrg::vec4 mesh_color;
+	bool hasColor = false;
 };
 
 class Model

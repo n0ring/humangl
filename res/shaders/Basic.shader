@@ -49,10 +49,7 @@ void main(){
             vec3 localNormal = mat3(finalBonesMatrices[BoneIDs[i]]) * aNormCoord;
             totalNormal += localNormal * Weights[i];
         }
-
         mat4 viewModel = u_view * u_model;
-
-        // gl_Position = u_proj * viewModel * pos; 
         TexCoord = aTexCoord;
         vec3 my_normal = normalize(mat3(u_model) * totalNormal);
         gl_Position =  u_proj * viewModel * totalPosition;
@@ -87,6 +84,7 @@ uniform sampler2D texture_normal;
 uniform sampler2D texture_height;
 uniform int DisplayBoneIndex;
 uniform vec3 u_mesh_color;
+uniform int u_mesh_color_flag;
 // debug bones weight
 #ifdef debug
 flat in ivec4 BoneIds_debug;
@@ -95,8 +93,11 @@ in vec4 BoneWeight_debug;
 
 void main() { 
 #ifndef debug
-    // vec3 diffuseColor = texture(texture_diffuse, TexCoord).rgb;
-    vec3 diffuseColor = u_mesh_color;
+    vec3 diffuseColor;
+    if (u_mesh_color_flag == 1)
+        diffuseColor = u_mesh_color;
+    else 
+        diffuseColor = texture(texture_diffuse, TexCoord).rgb;
     FragColor = vec4(diffuseColor, 1.0);
 
 #else // only for debbuging bones weight
