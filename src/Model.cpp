@@ -3,8 +3,6 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "Model.hpp"
 
-int count = 0;
-
 Model::Model(const std::string path, int objId)
 	: m_objId(objId),
 	  m_translation(0, 0, 0),
@@ -16,14 +14,11 @@ Model::Model(const std::string path, int objId)
 	  view_vec(0, 0, 0)
 
 {
-
 	nrg::vec3 cameraPos = nrg::vec3(0.0f, 0.0f, 7.0f); // Позиция камеры
 	nrg::vec3 targetPos = nrg::vec3(0.0f, 0.0f, 0.0f); // Точка, на которую смотрит камера
 	nrg::vec3 upVector = nrg::vec3(0.0f, 1.0f, 0.0f); // Вверх
-	// m_view = nrg::lookAt(cameraPos, targetPos, upVector);
 
 	std::unordered_map<std::string, std::string> mp;
-	mp["materials_size"] = "1";
 	#ifdef debug
 		mp["debug_flag"] = DEBUG_FLAG_STR;
 	#else
@@ -31,19 +26,8 @@ Model::Model(const std::string path, int objId)
 	#endif
 	m_shader = std::make_unique<Shader>("res/shaders/Basic.shader", mp);
 
-
-	// load model with assimp 
-	if (path.empty() == false)
-	{
-		loadModel(path);
-		std::cout << path << " model loaded!\n";
-	}
-// load model for humangl
-	else 
-	{
-		// load meshes from obj
-		std::cout << "model for humangl loaded\n";
-	}
+	loadModel(path);
+	std::cout << path << " model loaded!\n";
 
 
 	for (auto &mesh : meshes)
@@ -56,19 +40,7 @@ void Model::loadModel(const std::string path)
         // | aiProcess_PreTransformVertices;
 	Assimp::Importer importer;
 
-	const aiScene *scene = importer.ReadFile(path, assimp_flags);
-	// std::cout << "num animation: " << scene->mNumAnimations << std::endl;
-	// for (int i = 0; i < scene->mNumAnimations; i++)
-	// {
-	// 	std::cout << "animations channels: " <<  scene->mAnimations[i]->mNumChannels << std::endl;
-	// 	for (int k = 0; k < scene->mAnimations[i]->mNumChannels; k++)
-	// 	{
-	// 		std::cout << "mNumPositionKeys: " << scene->mAnimations[i]->mChannels[k]->mNumPositionKeys << std::endl;
-	// 		std::cout << "mNumRotationKeys: " << scene->mAnimations[i]->mChannels[k]->mNumRotationKeys << std::endl;
-	// 		std::cout << "mNumScalingKeys : " << scene->mAnimations[i]->mChannels[k]->mNumScalingKeys << std::endl;
-	// 	}
-	// }
-	
+	const aiScene *scene = importer.ReadFile(path, assimp_flags);	
 	if (scene == nullptr || (scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE) || scene->mRootNode == nullptr)
 	{
 		std::cout << "ASIMP error: " << importer.GetErrorString() << std::endl;
@@ -78,20 +50,7 @@ void Model::loadModel(const std::string path)
 	size_t endOfDir = path.find_last_of('/');
 	if (endOfDir != std::string::npos)
 		m_directory = path.substr(0, endOfDir);
-	if (scene->HasLights())
-	{
-		m_LightPos.x = scene->mLights[0]->mPosition.x;
-		m_LightPos.y = scene->mLights[0]->mPosition.y;
-		m_LightPos.z = scene->mLights[0]->mPosition.z;
-	}
-	else
-	{
-		std::cout << "custom light pos\n";
-		m_LightPos = nrg::vec3(0.0f, 0.0f, 127.0f);
-	}
-	m_shader->setUniformVec3("u_lightPos", m_LightPos);
 	processNode(scene->mRootNode, scene); // go rec on full tree
-
 	m_modelState.boneCount = m_BoneCounter;
 	std::cout << "bones number: " << m_BoneCounter << std::endl;
 }
@@ -117,6 +76,7 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene, nrg::mat4 transform)
 	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indeces;
 	std::vector<Texture> textures;
+	nrg::vec4 mesh_color;
 
 	// positions, texture coords, normals
 	for (unsigned int i = 0; i < mesh->mNumVertices; i++)
@@ -147,16 +107,21 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene, nrg::mat4 transform)
 	// material
 	if (mesh->mMaterialIndex >= 0)
 	{
+		aiColor4D diffuseColor;
+		if (AI_SUCCESS == aiGetMaterialColor(scene->mMaterials[mesh->mMaterialIndex], AI_MATKEY_COLOR_DIFFUSE, &diffuseColor)) {
+			mesh_color = nrg::vec4(diffuseColor.r, diffuseColor.g, diffuseColor.b, diffuseColor.a);
+		}
 		loadMaterialTextures(scene, scene->mMaterials[mesh->mMaterialIndex], aiTextureType_DIFFUSE, "texture_diffuse", textures);
 		loadMaterialTextures(scene, scene->mMaterials[mesh->mMaterialIndex], aiTextureType_SPECULAR, "texture_specular", textures);
 		loadMaterialTextures(scene, scene->mMaterials[mesh->mMaterialIndex], aiTextureType_HEIGHT, "texture_normal", textures);
 		loadMaterialTextures(scene, scene->mMaterials[mesh->mMaterialIndex], aiTextureType_AMBIENT, "texture_height", textures);
 	}
-
 	// bones
-	// if (mesh->HasBones())
-	ExtractBoneWeightForVertices(vertices, mesh, scene);
-	return Mesh(vertices, indeces, textures);
+	if (mesh->HasBones() && hasAnimation)
+	{
+		ExtractBoneWeightForVertices(vertices, mesh, scene);
+	}
+	return Mesh(vertices, indeces, textures, mesh_color);
 }
 
 /*-------------- textures--------------*/
@@ -329,7 +294,7 @@ void Model::Draw()
 	nrg::mat4 mvp = m_proj * m_view * model;
 	m_shader->bind();
 
-	m_shader->setUniformMat4f("u_MVP", mvp);
+	// m_shader->setUniformMat4f("u_MVP", mvp);
 	m_shader->setUniformMat4f("u_model", model);
 	m_shader->setUniformMat4f("u_proj", m_proj);
 	m_shader->setUniformMat4f("u_view", m_view);
@@ -354,12 +319,6 @@ void Model::Draw()
 	}
 }
 
-void printVec3(nrg::vec3 v)
-{
-	count++;
-	std::cout << v.x << ", " << v.y << ", " << v.z << "\n";
-}
-
 /// mesh stuff
 void Mesh::setupMesh()
 {
@@ -367,7 +326,6 @@ void Mesh::setupMesh()
 	glEnable(GL_BLEND);
 
 	m_VAO = std::make_unique<VertexArray>();
-	// m_UBO = std::make_unique<UniformBuffer>(m_parsedObject->getMaterials().data(), m_parsedObject->getMaterials().size());
 	m_VBO = std::make_unique<VertexBuffer>(m_Vertices.data(), m_Vertices.size() * sizeof(Vertex));
 
 	VertexBufferLayout layouts;
@@ -393,7 +351,7 @@ void Mesh::Draw(Shader &shader)
 		shader.setUniform1i(text.type, texSlot);
 		texSlot++;
 	}
-
+	shader.setUniformVec3("u_mesh_color", {mesh_color.x, mesh_color.y, mesh_color.z});
 	glDrawElements(GL_TRIANGLES, m_IBO->getCount(), GL_UNSIGNED_INT, nullptr);
 	glBindVertexArray(0);
 	glActiveTexture(GL_TEXTURE0);

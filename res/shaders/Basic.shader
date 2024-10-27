@@ -11,7 +11,6 @@ layout(location = 2) in vec3 aNormCoord;
 layout(location = 5) in ivec4 BoneIDs;
 layout(location = 6) in vec4 Weights;
 
-uniform mat4 u_MVP;
 uniform mat4 u_model;
 uniform mat4 u_proj;
 uniform mat4 u_view;
@@ -86,53 +85,21 @@ uniform sampler2D texture_diffuse;
 uniform sampler2D texture_specular;
 uniform sampler2D texture_normal;
 uniform sampler2D texture_height;
-// uniform vec3 u_lightPos;
 uniform int DisplayBoneIndex;
-
+uniform vec3 u_mesh_color;
 // debug bones weight
 #ifdef debug
 flat in ivec4 BoneIds_debug;
 in vec4 BoneWeight_debug;
 #endif
 
-vec3 calculateLighting(vec3 normal, vec3 viewDir, vec3 lightDir, vec3 diffuseColor, vec3 specularColor, float shininess)
-{
-    float diff = max(dot(normal, lightDir), 0.0);
-    vec3 diffuse = diff * diffuseColor;
-
-    vec3 reflectDir = reflect(-lightDir, normal);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
-    vec3 specular = spec * specularColor;
-
-    return diffuse + specular;
-}
-
 void main() { 
 #ifndef debug
-	// vec3 u_lightPos = vec3(0, 0, -100);
-	// vec3 viewPos = vec3(0, 0, 0);
     // vec3 diffuseColor = texture(texture_diffuse, TexCoord).rgb;
-    // vec3 specularColor = texture(texture_specular, TexCoord).rgb;
-    // vec3 normal = texture(texture_normal, TexCoord).rgb;
-    // float height = texture(texture_height, TexCoord).r;
-
-    // normal = normalize(normal * 2.0 - 1.0);
-
-    // vec3 displacedNormal = normalize(normal + vec3(height) * 0.1);
-    // vec3 lightDir = normalize(u_lightPos - FragPos);
-    // vec3 viewDir = normalize(viewPos - FragPos);
-    // vec3 lighting = calculateLighting(displacedNormal, viewDir, lightDir, diffuseColor, specularColor, 32.0);
-    // FragColor = vec4(diffuseColor * specularColor * normal, 1.0);
-    // FragColor = vec4(lighting, 1.0f);
-
-    // debug remove after for textures 
-    // FragColor = vec4(0.5f, 0, 0, 1.0f);
-
-    // just texture 
-    vec3 diffuseColor = texture(texture_diffuse, TexCoord).rgb;
+    vec3 diffuseColor = u_mesh_color;
     FragColor = vec4(diffuseColor, 1.0);
 
-#else
+#else // only for debbuging bones weight
     bool found = false;
     for (int i = 0; i < 4; i++)
     {

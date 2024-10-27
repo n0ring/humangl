@@ -1,8 +1,5 @@
 #include "Bone.hpp"
 
-
-
-
 Bone::Bone(const std::string& name, int ID, const aiNodeAnim* channel)
 	: m_name(name), m_id(ID), m_LocalTransform(1.0f)
 {
@@ -19,7 +16,6 @@ Bone::Bone(const std::string& name, int ID, const aiNodeAnim* channel)
 	}
 
 	m_numRotations = channel->mNumRotationKeys;
-	// std::cout << "m_numRotations for bone " << name << " " << m_numRotations << std::endl;
 	for (int rotationIndex = 0; rotationIndex < m_numRotations; ++rotationIndex)
 	{
 		aiQuaternion aiOrientation = channel->mRotationKeys[rotationIndex].mValue;
@@ -129,7 +125,6 @@ nrg::mat4 Bone::InterpolateRotation(float animationTime)
 	nrg::quat finalRotation = nrg::slerp(m_rotations[p0Index].orientation,
 		m_rotations[p1Index].orientation, scaleFactor);
 	finalRotation =  nrg::normalize(finalRotation);
-	// return finalRotation.toMatrix();
 	return nrg::toMat4(finalRotation);
 }
 

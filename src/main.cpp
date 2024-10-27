@@ -37,10 +37,6 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 int main(int argc, char** argv)
 {
-
-	nrg::quat orientation;
-
-
 	GLFWwindow *window;
 	std::vector<Model> objects;
 	unsigned int objId = 0;
@@ -64,7 +60,6 @@ int main(int argc, char** argv)
 
 	/* Make the window's context current */
 	glfwMakeContextCurrent(window);
-
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
 		std::cout << "Failed to initialize GLAD" << std::endl;
@@ -76,8 +71,8 @@ int main(int argc, char** argv)
 	glEnable(GL_BLEND);
 	std::unordered_map<std::string, std::string> configMap;
 
-	// std::string configFileName = "animations.conf";
-	std::string configFileName = "humangl_animations.conf"; 
+	std::string configFileName = "animations.conf";
+	// std::string configFileName = "humangl_animations.conf"; 
 	if (!AnimationConfigParser::parseConfig(configFileName, configMap))
 	{
 		return -1;
@@ -96,13 +91,13 @@ int main(int argc, char** argv)
 	}
 	
 	glfwSetKeyCallback(window, key_callback);
-	glEnable(GL_BLEND);
+	// glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_DEPTH_TEST);
 	
 	// objects[0].getModelState().setElder();
 	objects[0].setObjectAsActive();
-	glClearColor(0.0f, 0.1f, 0.1f, 1.0f);
+	glClearColor(.5f, .5f, .5f, 1.0f);
 	// timing
 	float deltaTime = 0.0f;
 	float lastFrame = 0.0f;
@@ -136,5 +131,3 @@ int main(int argc, char** argv)
 	glfwTerminate();
 	return 0;
 }
-
- // add is active

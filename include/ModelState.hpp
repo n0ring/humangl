@@ -1,12 +1,7 @@
 #pragma once 
-
-// #include "glm/glm.hpp"
-// #include "glm/gtc/matrix_transform.hpp"
-
 #include "nrg_math.hpp"
 
 #include "glm_inc.hpp"
-// #define nrg glm
 
 #define MOVE_STEP 1.0f
 #define SCALE_STEP 0.01f
@@ -34,8 +29,6 @@ struct ModelState
 	bool fill_model = false;
 	nrg::vec3 translation;
 	RenderMode renderMode = RenderMode::COLOR;
-	// nrg::vec3 centerOffsetMin = {100000.0f};
-	// nrg::vec3 centerOffsetMax = {-100000.0f};
 	bool hasNormals = false;
 	nrg::vec3 lightPos;
 	bool lightOn = false;
@@ -114,35 +107,29 @@ struct ModelState
 
 	void moveModelUp()
 	{
-		// if (translation.y <= 3.0f)
 			translation.y += MOVE_MODEL_STEP;
 	}
 	void moveModelDown()
 	{
-		// if (translation.y >= -3.0f)
 			translation.y -= MOVE_MODEL_STEP;
 	}
 
 	void moveModelRight()
 	{
-		// if (translation.x <= 5.0f)
 			translation.x += MOVE_MODEL_STEP;
 	}
 	void moveModelLeft()
 	{
-		// if (translation.x >= -5.0f)
 			translation.x -= MOVE_MODEL_STEP;
 	}
 
 	void moveModelClose()
 	{
-		// if (translation.z >= -6.0f)
 			translation.z -= MOVE_MODEL_STEP;
 	}
 
 	void moveModelFar()
 	{
-		// if (translation.z <= 2.5f)
 			translation.z += MOVE_MODEL_STEP;
 	}
 
@@ -181,7 +168,9 @@ struct ModelState
 
 	void changeAnimToJump()
 	{
+		#ifndef debug
 		m_currentAnimation = CUR_ANIM_JUMP;
+		#endif
 	}
 
 	void setAnimationChangeStatus(bool status)

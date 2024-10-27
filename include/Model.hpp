@@ -18,11 +18,9 @@
 
 #include "glm_inc.hpp"
 #include "GLM_utils.hpp"
-// #define nrg glm
 
 #define MAX_BONE_INFLUENCE 4
 
-// #define debug // uncomment if need to turn on bones weights
 #ifdef debug
 	#define DEBUG_FLAG_STR "#define debug"
 #endif
@@ -49,14 +47,6 @@ struct Vertex
 	float m_Weights[MAX_BONE_INFLUENCE];
 };
 
-// layout(location = 0) in vec3 pos;
-// layout(location = 1) in vec2 aTexCoord;
-// layout(location = 2) in vec3 aNormCoord;
-// // layout(location = 3) in vec3 tangent;
-// // layout(location = 4) in vec3 bitangent;
-// layout(location = 5) in ivec4 BoneIDs;
-// layout(location = 6) in vec4 Weights;
-
 struct Texture
 {
 	unsigned int id;
@@ -72,8 +62,8 @@ public:
 	std::vector<unsigned int> m_Indices;
 	std::vector<Texture> m_Textures;
 
-	Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures)
-		: m_Vertices(vertices), m_Indices(indices), m_Textures(textures) {}
+	Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures, nrg::vec4 color)
+		: m_Vertices(vertices), m_Indices(indices), m_Textures(textures), mesh_color(color) {}
 	void Draw(Shader &shader);
 	void setupMesh(); // set buffers
 private:
@@ -85,6 +75,7 @@ private:
 	std::unique_ptr<IndexBuffer> m_IBO;
 	std::unique_ptr<VertexBuffer> m_VBO;
 	std::unique_ptr<::Texture> m_texture;
+	nrg::vec4 mesh_color;
 };
 
 class Model

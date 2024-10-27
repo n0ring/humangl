@@ -32,6 +32,9 @@ void Animator::PlayAnimation(Animation *pAnimation)
 
 void Animator::CalculateBoneTransform(const AssimpNodeData *node, nrg::mat4 parentTransform)
 {
+	if (node == NULL || m_CurrentAnimation == NULL)
+		return ;
+
 	std::string nodeName = node->name;
 	nrg::mat4 nodeTransform = node->transformation;
 	Bone *Bone = m_CurrentAnimation->FindBone(nodeName);
@@ -44,8 +47,8 @@ void Animator::CalculateBoneTransform(const AssimpNodeData *node, nrg::mat4 pare
 
 	nrg::mat4 globalTransformation = parentTransform * nodeTransform;
 	// GLM_utils::printMatrix(globalTransformation);
-
 	auto boneInfoMap = m_CurrentAnimation->GetBoneIDMap();
+
 	if (boneInfoMap.find(nodeName) != boneInfoMap.end())
 	{
 		int index = boneInfoMap[nodeName].id;
@@ -55,4 +58,5 @@ void Animator::CalculateBoneTransform(const AssimpNodeData *node, nrg::mat4 pare
 
 	for (int i = 0; i < node->childrenCount; i++)
 		CalculateBoneTransform(&node->children[i], globalTransformation);
+	
 }
