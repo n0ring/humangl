@@ -4,7 +4,6 @@ Bone::Bone(const std::string& name, int ID, const aiNodeAnim* channel)
 	: m_name(name), m_id(ID), m_LocalTransform(1.0f)
 {
 	m_numPositions = channel->mNumPositionKeys;
-	// std::cout << "m_numPositions for bone " << name << " " << m_numPositions << std::endl;
 	for (int positionIndex = 0; positionIndex < m_numPositions; ++positionIndex)
 	{
 		KeyPosition data;

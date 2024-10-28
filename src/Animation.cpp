@@ -57,16 +57,6 @@ nrg::mat4 inverse(nrg::mat4& m)
                                  (m[1][2] * m[2][0] - m[1][0] * m[2][2]) + m[0][2] * (m[1][0] * m[2][1] - m[1][1] * m[2][0]));
         return res;
 }
-aiMatrix4x4 ConvertFBXtoDAE(aiMatrix4x4 matrix) {
-    // Корректировка матрицы для приведения FBX к DAE
-	std::cout << "do correction from fbx to dae matrix\n";
-    aiMatrix4x4 rotation(1, 0, 0, 0,
-                         0, 0, 1, 0,
-                         0, -1, 0, 0,
-                         0, 0, 0, 1);
-    matrix = rotation * matrix;
-	return matrix;
-}
 
 Animation::Animation(const std::string &animationPath, Model *model)
 {
@@ -77,7 +67,6 @@ Animation::Animation(const std::string &animationPath, Model *model)
         | aiProcess_GenSmoothNormals;
 	Assimp::Importer importer;
 	const aiScene *scene = importer.ReadFile(animationPath, assimp_flags);
-	// const aiScene *scene = importer.ReadFile(animationPath, aiProcess_Triangulate | aiProcess_MakeLeftHanded | aiProcess_FlipWindingOrder);
 	if (!scene || !scene->mRootNode)
 	{
 		std::cout << "Error load animation : " << animationPath << std::endl;
@@ -86,7 +75,6 @@ Animation::Animation(const std::string &animationPath, Model *model)
 
 	m_globalTransform =  GLM_utils::convertMatrixToGLMFormat(scene->mRootNode->mTransformation);
 	m_globalTransform = inverse(m_globalTransform);
-	// GLM_utils::printMatrix(m_globalTransform);
 	assert(scene && scene->mRootNode);
 	if (scene->mNumAnimations == 0)
 	{

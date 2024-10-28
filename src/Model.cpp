@@ -105,9 +105,9 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene, nrg::mat4 transform)
 	{
 		aiColor4D diffuseColor;
 		loadMaterialTextures(scene, scene->mMaterials[mesh->mMaterialIndex], aiTextureType_DIFFUSE, "texture_diffuse", textures);
-		loadMaterialTextures(scene, scene->mMaterials[mesh->mMaterialIndex], aiTextureType_SPECULAR, "texture_specular", textures);
-		loadMaterialTextures(scene, scene->mMaterials[mesh->mMaterialIndex], aiTextureType_HEIGHT, "texture_normal", textures);
-		loadMaterialTextures(scene, scene->mMaterials[mesh->mMaterialIndex], aiTextureType_AMBIENT, "texture_height", textures);
+		// loadMaterialTextures(scene, scene->mMaterials[mesh->mMaterialIndex], aiTextureType_SPECULAR, "texture_specular", textures);
+		// loadMaterialTextures(scene, scene->mMaterials[mesh->mMaterialIndex], aiTextureType_HEIGHT, "texture_normal", textures);
+		// loadMaterialTextures(scene, scene->mMaterials[mesh->mMaterialIndex], aiTextureType_AMBIENT, "texture_height", textures);
 		if (textures.empty() && AI_SUCCESS == aiGetMaterialColor(scene->mMaterials[mesh->mMaterialIndex], AI_MATKEY_COLOR_DIFFUSE, &diffuseColor))
 		{
 			mesh_color = nrg::vec4(diffuseColor.r, diffuseColor.g, diffuseColor.b, diffuseColor.a);
@@ -290,8 +290,6 @@ void Model::Draw()
 
 	nrg::mat4 mvp = m_proj * m_view * model;
 	m_shader->bind();
-
-	// m_shader->setUniformMat4f("u_MVP", mvp);
 	m_shader->setUniformMat4f("u_model", model);
 	m_shader->setUniformMat4f("u_proj", m_proj);
 	m_shader->setUniformMat4f("u_view", m_view);
@@ -341,20 +339,22 @@ void Mesh::Draw(Shader &shader)
 {
 	m_VAO->bind();
 	int texSlot = 0;
-	for (auto &text : m_Textures)
-	{
-		glActiveTexture(GL_TEXTURE0 + texSlot);
-		glBindTexture(GL_TEXTURE_2D, text.id);
-		shader.setUniform1i(text.type, texSlot);
-		texSlot++;
-	}
 	if (hasColor)
 	{
 		shader.setUniformVec3("u_mesh_color", {mesh_color.x, mesh_color.y, mesh_color.z});
 		shader.setUniform1i("u_mesh_color_flag", 1);
 	}
 	else 
+	{
 		shader.setUniform1i("u_mesh_color_flag", 0);
+		for (auto &text : m_Textures)
+		{
+			glActiveTexture(GL_TEXTURE0 + texSlot);
+			glBindTexture(GL_TEXTURE_2D, text.id);
+			shader.setUniform1i(text.type, texSlot);
+			texSlot++;
+		}
+	}
 	glDrawElements(GL_TRIANGLES, m_IBO->getCount(), GL_UNSIGNED_INT, nullptr);
 	glBindVertexArray(0);
 	glActiveTexture(GL_TEXTURE0);

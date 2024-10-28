@@ -13,6 +13,7 @@ SRC		=	$(addprefix src/,	main.cpp\
 								Animator.cpp\
 								AnimationConfigParser.cpp\
 								nrg_math.cpp\
+								OpenGlSetter.cpp\
 								)
 OBJDIR	=	obj
 SRCDIR	=	src

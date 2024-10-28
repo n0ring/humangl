@@ -1,13 +1,10 @@
 #shader vertex
 #version 330 core
-// #define debug
 $debug_flag$
 
 layout(location = 0) in vec3 pos;
 layout(location = 1) in vec2 aTexCoord;
 layout(location = 2) in vec3 aNormCoord;
-// layout(location = 3) in vec3 tangent;
-// layout(location = 4) in vec3 bitangent;
 layout(location = 5) in ivec4 BoneIDs;
 layout(location = 6) in vec4 Weights;
 
@@ -70,7 +67,6 @@ void main(){
 
 #shader fragment
 #version 330 core
-// #define debug
 $debug_flag$
 
 out vec4 FragColor;
@@ -79,9 +75,9 @@ in vec3 FragPos;
 in vec3 my_normal;
 
 uniform sampler2D texture_diffuse;
-uniform sampler2D texture_specular;
-uniform sampler2D texture_normal;
-uniform sampler2D texture_height;
+// uniform sampler2D texture_specular;
+// uniform sampler2D texture_normal;
+// uniform sampler2D texture_height;
 uniform int DisplayBoneIndex;
 uniform vec3 u_mesh_color;
 uniform int u_mesh_color_flag;

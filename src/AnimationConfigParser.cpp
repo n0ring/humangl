@@ -19,7 +19,7 @@ void trimString(std::string& s)
 	rtrim(s);
 }
 
-void split(std::string &line, std::vector<std::string> &words, char div)
+void split(std::string &line, std::vector<std::string> &words)
 {
 	size_t start = 0, end = 0;
 	words.clear();
@@ -27,10 +27,10 @@ void split(std::string &line, std::vector<std::string> &words, char div)
 		return;
 	while (end < line.size())
 	{
-		while (start < line.size() && line[start] == div)
+		while (start < line.size() && isspace(line[start]))
 			start++;
 		end = start;
-		while (end < line.size() && line[end] != div)
+		while (end < line.size() && isspace(line[end]) == 0)
 			end++;
 		if (end - start > 0)
 			words.push_back(line.substr(start, end - start));
@@ -54,7 +54,7 @@ bool AnimationConfigParser::parseConfig(const std::string &filename, std::unorde
 	{
 		if (line.empty())
 			continue;
-		split(line, words, ' ');
+		split(line, words);
 		if (words.size() != 3)
 		{
 			std::cout << "config error in file: " << filename << std::endl;
