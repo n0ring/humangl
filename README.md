@@ -18,7 +18,7 @@ To render a model with animations, create a configuration file (see example belo
 
 ./humangl pathToConfigFile
 
-**Controls: **
+**Controls:**
 
 **W, A, S, D** - Move object along the XY axis
 
@@ -33,6 +33,7 @@ To render a model with animations, create a configuration file (see example belo
 **-/+** - Scale object (hold Left Shift with + for finer scaling)
 
 **Animations:**
+
 **Idle** Plays automatically
 
 **G** - Walk animation
@@ -43,15 +44,15 @@ To render a model with animations, create a configuration file (see example belo
 
 **Config File Example:**
 
-model = res/model/model.dae
+_model = res/model/model.dae_
 
-idle = res/model/idle.dae
+_idle = res/model/idle.dae_
 
-jump = res/model/jump.dae
+_jump = res/model/jump.dae_
 
-walk = res/model/walk.dae
+_walk = res/model/walk.dae_
 
-kick = res/model/kick.dae
+_kick = res/model/kick.dae_
 
 https://github.com/user-attachments/assets/9362931f-c0a0-4d92-9d91-e142bc4119f3
 
